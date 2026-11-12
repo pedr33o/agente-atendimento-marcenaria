@@ -1,0 +1,52 @@
+[
+  {
+    "pergunta": "Quais ambientes vocês fazem?",
+    "tags": ["ambiente", "ambientes", "cozinha", "quarto", "closet", "sala", "banheiro", "escritorio", "lavanderia", "home office", "comercial"],
+    "resposta": "Fazemos cozinhas, quartos, closets, salas, banheiros, lavanderias, home offices e também ambientes comerciais."
+  },
+  {
+    "pergunta": "Quais materiais vocês usam?",
+    "tags": ["material", "materiais", "mdf", "mdp", "madeira", "acabamento", "ferragem", "ferragens", "dobradica", "corredica", "qualidade"],
+    "resposta": "Trabalhamos com MDF de alta densidade (15 e 18 mm) de fabricantes nacionais, com acabamentos em laminado, BP e lâmina de madeira. As ferragens (dobradiças e corrediças) têm amortecimento e são de marcas reconhecidas."
+  },
+  {
+    "pergunta": "Qual o prazo de produção e instalação?",
+    "tags": ["prazo", "entrega", "demora", "producao", "instalacao", "tempo", "quanto tempo"],
+    "resposta": "Em média, de 30 a 45 dias corridos após a aprovação do projeto e o pagamento da entrada. A instalação leva de 1 a 5 dias, conforme o tamanho do projeto. O prazo exato é confirmado no orçamento."
+  },
+  {
+    "pergunta": "Qual a garantia dos móveis?",
+    "tags": ["garantia", "defeito", "assistencia", "posvenda", "problema", "conserto"],
+    "resposta": "São 5 anos de garantia contra defeitos de fabricação e montagem. A assistência técnica acontece em até 7 dias úteis após o chamado."
+  },
+  {
+    "pergunta": "Quais as formas de pagamento?",
+    "tags": ["pagamento", "pagar", "parcelar", "parcela", "cartao", "pix", "boleto", "entrada", "financiamento", "forma", "formas"],
+    "resposta": "Aceitamos Pix, boleto e cartão de crédito em até 10x. Em geral, 40% de entrada na aprovação do projeto e o restante na entrega; as condições finais são definidas no orçamento."
+  },
+  {
+    "pergunta": "Quais cidades vocês atendem?",
+    "tags": ["cidade", "cidades", "regiao", "atende", "atendem", "bairro", "onde", "localizacao", "distante", "longe"],
+    "resposta": "Atendemos a cidade-sede e os municípios em um raio de até 60 km do nosso ateliê. Para endereços mais distantes, um atendente confirma se é possível."
+  },
+  {
+    "pergunta": "Como funciona a visita técnica?",
+    "tags": ["visita", "tecnica", "medicao", "medir", "agendar", "gratuita", "gratis", "projetista"],
+    "resposta": "A visita técnica é gratuita e sem compromisso. Um projetista mede o ambiente, entende o que você precisa e leva ideias de layout. Dura cerca de 1 hora."
+  },
+  {
+    "pergunta": "Quanto custa um móvel planejado?",
+    "tags": ["preco", "precos", "valor", "valores", "custa", "custo", "quanto", "orcamento", "caro", "desconto", "barato", "tabela"],
+    "resposta": "O valor depende de medidas, materiais, ferragens e acabamentos, por isso não passamos preço por mensagem. O orçamento é feito após a visita técnica, sem compromisso, e você recebe o projeto em 3D com o valor fechado."
+  },
+  {
+    "pergunta": "Vocês fazem projeto 3D?",
+    "tags": ["3d", "projeto", "render", "layout", "desenho", "visualizar"],
+    "resposta": "Sim. Depois da visita técnica, enviamos um projeto em 3D para você visualizar o ambiente antes de fechar."
+  },
+  {
+    "pergunta": "Qual o horário de atendimento?",
+    "tags": ["horario", "horarios", "funcionamento", "aberto", "atendimento", "sabado", "domingo", "expediente"],
+    "resposta": "Atendemos de segunda a sexta, das 9h às 17h. As visitas técnicas também acontecem de segunda a sexta."
+  }
+]

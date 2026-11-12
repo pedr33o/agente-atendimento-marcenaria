@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de atendimento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Sofia+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --board: #1e4a4f;
+    --ice: #f2f5f4;
+    --paper: #ffffff;
+    --ink: #1d2a2c;
+    --muted: #5c6b6e;
+    --line: #d5dddb;
+    --wood: #d8b47a;
+    --hover: #eaf0ef;
+    --selected: #dde9e7;
+    --display: "Sofia Sans Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+    --text: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--text); font-size: 15px; line-height: 1.45; color: var(--ink); background: var(--ice); }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--board); outline-offset: 2px; }
+  .bar :focus-visible { outline-color: #fff; }
+
+  .bar { position: relative; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 16px clamp(16px, 3vw, 32px); background: var(--board); color: #fff; }
+  .bar::after { content: ""; position: absolute; inset: auto 0 0 0; height: 4px; background: var(--wood); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 20px; }
+  .bar h1 { margin: 0; flex: 1; font-family: var(--display); font-weight: 600; font-size: 20px; color: #a9c2c4; }
+  .bar a { color: #fff; font-size: 14px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: var(--paper); border-bottom: 1px solid var(--line); }
+  .kpi { padding: 16px clamp(14px, 2vw, 24px); border-right: 1px solid var(--line); color: inherit; text-decoration: none; }
+  .kpi:last-child { border-right: 0; }
+  .kpi b { display: block; font-family: var(--display); font-weight: 700; font-size: 40px; line-height: 1; }
+  .kpi span { display: block; margin-top: 6px; font-size: 14px; color: var(--muted); }
+  a.kpi:hover { background: var(--hover); }
+  .kpi.alert b { box-shadow: inset 0 -6px 0 var(--wood); width: fit-content; }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; align-items: start; }
+  .main { padding: 24px clamp(16px, 3vw, 32px) 40px; min-width: 0; }
+  .drawer { position: sticky; top: 0; max-height: 100dvh; overflow-y: auto; padding: 24px; background: var(--paper); border-left: 1px solid var(--line); min-height: 60vh; }
+
+  .tablewrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--muted); border-bottom: 1px solid #b8c4c1; white-space: nowrap; }
+  td { padding: 12px 14px; vertical-align: top; border-bottom: 1px solid var(--line); }
+  td.nw { white-space: nowrap; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--hover); }
+  tbody tr.sel { background: var(--selected); }
+  td small { display: block; font-size: 13px; color: var(--muted); }
+  .none { color: var(--muted); }
+  .segs { display: inline-flex; gap: 3px; vertical-align: middle; margin-right: 8px; }
+  .segs i { width: 12px; height: 6px; background: var(--line); }
+  .segs i.on { background: var(--board); }
+  .tag { display: inline-block; padding: 2px 8px; font-size: 13px; font-weight: 600; background: #e3ebe9; color: var(--board); }
+  .tag.human { background: var(--wood); color: #3b2c12; }
+  .empty { padding: 36px 20px; text-align: center; color: var(--muted); }
+  .empty a { color: var(--board); }
+
+  h2 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.1; }
+  .teach { margin-top: 40px; scroll-margin-top: 16px; }
+  .teach > p { margin: 6px 0 12px; color: var(--muted); max-width: 60ch; }
+  .gap { padding: 14px 0; border-top: 1px solid var(--line); }
+  .gap strong { display: block; margin-bottom: 8px; font-weight: 600; }
+  .gap textarea { width: 100%; min-height: 70px; resize: vertical; font: inherit; padding: 9px 11px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+  .gap textarea:focus { outline: none; border-color: var(--board); box-shadow: 0 0 0 1px var(--board); }
+  .btns { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .btn { padding: 8px 14px; font-weight: 600; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+  .btn:hover { border-color: var(--board); }
+  .btn.primary { background: var(--board); border-color: var(--board); color: #fff; }
+  .learned { display: flex; gap: 12px; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--line); }
+  .learned b { display: block; font-weight: 600; }
+  .learned span { color: var(--muted); }
+  details { margin-top: 14px; }
+  summary { cursor: pointer; font-weight: 600; }
+
+  .drawer h2 { font-size: 22px; }
+  .drawer h3 { margin: 22px 0 6px; font-size: 14px; font-weight: 600; color: var(--muted); }
+  .drawer .hint { color: var(--muted); }
+  .facts { margin: 0; }
+  .facts div { display: grid; grid-template-columns: 90px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; overflow-wrap: anywhere; }
+  .m { max-width: 92%; margin: 0 0 8px; padding: 8px 12px; border-radius: 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .m.user { margin-left: auto; background: var(--board); color: #fff; border-bottom-right-radius: 2px; }
+  .m.assistant { background: var(--ice); border: 1px solid var(--line); border-bottom-left-radius: 2px; }
+
+  @media (max-width: 999px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .kpi { border-bottom: 1px solid var(--line); }
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .drawer { position: static; max-height: none; border-left: 0; border-top: 1px solid var(--line); min-height: 0; }
+  }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="brand">
+    <svg width="24" height="24" viewBox="0 0 26 26" fill="none" aria-hidden="true"><rect x="2" y="2" width="22" height="22" stroke="#d8b47a" stroke-width="2"/><path d="M13 2v22M9.5 11v4M16.5 11v4" stroke="#d8b47a" stroke-width="2"/></svg>
+    <span id="wordmark">Marcenaria Nogueira</span>
+  </div>
+  <h1>Painel de atendimento</h1>
+  <a href="/">Ver o chat</a>
+</header>
+
+<section class="kpis" aria-label="Resumo do atendimento">
+  <div class="kpi"><b id="kConv">0</b><span>Conversas</span></div>
+  <div class="kpi"><b id="kQual">0</b><span>Com a ficha completa</span></div>
+  <div class="kpi"><b id="kVis">0</b><span>Visitas marcadas</span></div>
+  <div class="kpi"><b id="kHum">0</b><span>Com atendente</span></div>
+  <a class="kpi" id="kGapBox" href="#ensinar"><b id="kGap">0</b><span>Dúvidas para responder</span></a>
+</section>
+
+<div class="layout">
+  <div class="main">
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Cliente</th><th>Ambiente</th><th>Cidade</th><th>Ficha</th><th>Visita</th><th>Situação</th><th>Atualizado</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>Nenhuma conversa ainda. <a href="/">Abra o chat</a> e simule um cliente.</div>
+    </div>
+
+    <section class="teach" id="ensinar" aria-labelledby="teachTitle">
+      <h2 id="teachTitle">Dúvidas que a Duda não soube responder</h2>
+      <p>Escreva a resposta certa. Ela passa a valer para todos os próximos clientes.</p>
+      <div id="gaps"><p class="none">Nenhuma dúvida pendente.</p></div>
+      <details id="learnedBox" hidden><summary id="learnedSummary">O que a Duda já aprendeu</summary><div id="learnedList"></div></details>
+    </section>
+  </div>
+
+  <aside class="drawer" aria-live="polite">
+    <h2 id="drawerTitle">Conversa</h2>
+    <div id="drawerBody"><p class="hint">Selecione uma linha da tabela para ver a ficha e a conversa.</p></div>
+  </aside>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const token = new URLSearchParams(location.search).get("token") || "";
+const q = token ? "?token=" + encodeURIComponent(token) : "";
+const REQUIRED = ["nome", "ambiente", "cidade", "medidas", "prazo"];
+const LABELS = { nome: "Cliente", telefone: "Telefone", ambiente: "Ambiente", estilo: "Estilo", cidade: "Cidade", medidas: "Medidas", prazo: "Prazo", orcamento: "Investimento" };
+let selected = null, counts = { gaps: 0 };
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+function filled(r) { return REQUIRED.filter((k) => r[k] && String(r[k]).trim()).length; }
+function fmtVisit(r) {
+  if (!r.visita_data) return null;
+  const [, m, d] = r.visita_data.split("-");
+  return `${d}/${m} às ${r.visita_hora}`;
+}
+function fmtDate(iso) {
+  return new Date(iso).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+}
+function td(tr, content, sub, emptyText = "—", nowrap = false) {
+  const c = el("td");
+  if (nowrap) c.className = "nw";
+  if (content == null || content === "") c.append(el("span", "none", emptyText));
+  else c.append(document.createTextNode(content));
+  if (sub) c.append(el("small", null, sub));
+  tr.append(c); return c;
+}
+
+function renderKpis(leads) {
+  $("kConv").textContent = leads.length;
+  $("kQual").textContent = leads.filter((r) => filled(r) === REQUIRED.length).length;
+  $("kVis").textContent = leads.filter((r) => r.visita_data).length;
+  $("kHum").textContent = leads.filter((r) => r.handoff_reason).length;
+  $("kGap").textContent = counts.gaps;
+  $("kGapBox").classList.toggle("alert", counts.gaps > 0);
+}
+
+let lastLeads = [];
+async function loadRows() {
+  const res = await fetch("/api/leads" + q);
+  const empty = $("empty");
+  if (res.status === 401) {
+    $("rows").replaceChildren(); empty.hidden = false;
+    empty.textContent = "Token inválido. Abra o painel com ?token= seguido da sua senha.";
+    return;
+  }
+  const { leads } = await res.json();
+  lastLeads = leads;
+  const body = $("rows"); body.replaceChildren();
+  empty.hidden = leads.length > 0;
+  for (const r of leads) {
+    const tr = el("tr");
+    if (r.session_id === selected) tr.className = "sel";
+    tr.tabIndex = 0;
+    td(tr, r.nome, r.telefone, "Sem nome");
+    td(tr, r.ambiente, r.estilo);
+    td(tr, r.cidade);
+
+    const n = filled(r), fc = el("td", "nw");
+    const segs = el("span", "segs"); segs.setAttribute("aria-hidden", "true");
+    REQUIRED.forEach((_, i) => segs.append(el("i", i < n ? "on" : "")));
+    fc.append(segs, document.createTextNode(`${n} de ${REQUIRED.length}`));
+    tr.append(fc);
+
+    const visit = fmtVisit(r), vc = el("td");
+    if (visit) { vc.append(document.createTextNode(visit)); vc.append(el("small", null, r.visita_endereco)); }
+    else vc.append(el("span", "none", "Sem visita"));
+    tr.append(vc);
+
+    const sc = el("td");
+    if (r.handoff_reason) { sc.append(el("span", "tag human", "Atendente chamado")); sc.append(el("small", null, r.handoff_reason)); }
+    else sc.append(el("span", "tag", "Duda atendendo"));
+    tr.append(sc);
+
+    td(tr, fmtDate(r.updated_at), null, "—", true);
+    const open = () => openDrawer(r);
+    tr.addEventListener("click", open);
+    tr.addEventListener("keydown", (e) => { if (e.key === "Enter") open(); });
+    body.append(tr);
+  }
+  renderKpis(leads);
+}
+
+async function openDrawer(r) {
+  selected = r.session_id;
+  $("drawerTitle").textContent = r.nome ? `Conversa com ${r.nome}` : "Conversa sem nome";
+  const res = await fetch(`/api/leads/${encodeURIComponent(r.session_id)}/transcript` + q);
+  const { messages } = await res.json();
+  const box = $("drawerBody"); box.replaceChildren();
+
+  const facts = Object.keys(LABELS).filter((k) => r[k] && String(r[k]).trim());
+  if (facts.length) {
+    box.append(el("h3", null, "Ficha do projeto"));
+    const dl = el("dl", "facts");
+    for (const k of facts) { const row = el("div"); row.append(el("dt", null, LABELS[k]), el("dd", null, r[k])); dl.append(row); }
+    box.append(dl);
+  }
+  box.append(el("h3", null, "Conversa"));
+  if (!messages.length) box.append(el("p", "hint", "Sem mensagens."));
+  for (const m of messages) box.append(el("div", "m " + m.role, m.content));
+  loadRows();
+}
+
+let gapSig = "";
+async function api(method, path, body) {
+  const res = await fetch(path + q, { method, headers: { "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  if (!res.ok) { alert("Não foi possível salvar (erro " + res.status + ")."); return false; }
+  return true;
+}
+function btn(text, cls, onclick) { const b = el("button", "btn " + cls, text); b.type = "button"; b.addEventListener("click", onclick); return b; }
+
+async function loadGaps(force) {
+  const res = await fetch("/api/gaps" + q);
+  if (!res.ok) return;
+  const { gaps, learned } = await res.json();
+  counts.gaps = gaps.length;
+  renderKpis(lastLeads);
+  const sig = JSON.stringify([gaps.map((g) => g.id), learned.map((l) => l.id)]);
+  if (sig === gapSig && !force) return;
+  gapSig = sig;
+
+  const box = $("gaps"); box.replaceChildren();
+  if (!gaps.length) box.append(el("p", "none", "Nenhuma dúvida pendente."));
+  for (const g of gaps) {
+    const wrap = el("div", "gap");
+    const ta = el("textarea"); ta.maxLength = 800; ta.placeholder = "Escreva a resposta que a Duda deve dar";
+    ta.setAttribute("aria-label", "Resposta para: " + g.question);
+    const btns = el("div", "btns");
+    btns.append(
+      btn("Ensinar a Duda", "primary", async () => {
+        if (ta.value.trim().length < 3) { ta.focus(); return; }
+        if (await api("POST", `/api/gaps/${g.id}/answer`, { resposta: ta.value })) loadGaps(true);
+      }),
+      btn("Descartar", "", async () => { if (await api("POST", `/api/gaps/${g.id}/dismiss`)) loadGaps(true); }),
+    );
+    wrap.append(el("strong", null, g.question), ta, btns); box.append(wrap);
+  }
+
+  $("learnedBox").hidden = learned.length === 0;
+  $("learnedSummary").textContent = `O que a Duda já aprendeu (${learned.length})`;
+  const list = $("learnedList"); list.replaceChildren();
+  for (const l of learned) {
+    const row = el("div", "learned"), txt = el("div");
+    txt.append(el("b", null, l.pergunta), el("span", null, l.resposta));
+    row.append(txt, btn("Remover", "", async () => { if (await api("DELETE", `/api/learned/${l.id}`)) loadGaps(true); }));
+    list.append(row);
+  }
+}
+
+fetch("/api/info").then((r) => r.json()).then((i) => { if (i.business) $("wordmark").textContent = i.business; }).catch(() => {});
+loadRows().then(() => loadGaps(true));
+setInterval(() => { loadRows(); loadGaps(false); }, 6000);
+</script>
+</body>
+</html>
